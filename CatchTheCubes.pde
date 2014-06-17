@@ -1,6 +1,8 @@
 // Catch the Cubes
 // by Topher6345
 // http://github.com/topher6345/CatchTheCubes
+// Copyright Christopher Saunders 2014
+// http://creativecommons.org/licenses/by-nc-sa/4.0/
 
 import processing.opengl.*;
 import ddf.minim.*;
@@ -22,7 +24,7 @@ TutorialViewController tutorialViewController = new TutorialViewController();
 color[] g_colorPalette = {#00A4CC, #00F224, #FFD33E, #FF5241, #A600CC, };
 
 float cubeSpeed;
-int   levelNumber = 2; 
+int   levelNumber = 2;
 
 // Change Difficulty Here
 final float initCubeSpeed = 2;
@@ -53,7 +55,7 @@ void setup(){
   frameRate(60);
   background(0);
   smooth();
-  font = loadFont("Futura-CondensedMedium-48.vlw"); 
+  font = loadFont("Futura-CondensedMedium-48.vlw");
   currentScreen = MAIN_MENU;
 
   catchSample     = minim.loadSample("catch.aif"    ,BUFFERSIZE);
@@ -65,13 +67,13 @@ void setup(){
 void draw(){
 
   background(0);
-  
+
   switch(currentScreen) {
-    
+
     case MAIN_MENU:
       mainMenuViewController.draw();
       break;
-     
+
     case HOW_TO:
       tutorialViewController.draw(score);
       break;
@@ -87,7 +89,7 @@ void draw(){
 }
 
 void stop(){
-  super.stop();    
+  super.stop();
 }
 
 int newSpeed(int rotation) {
@@ -116,7 +118,7 @@ class MainMenuViewController {
     howToPlayButtonView = new HowToPlayButtonView();
     tSDotcomButtonView  = new TSDotcomButtonView();
 
-    int rotation = 1;    
+    int rotation = 1;
 
     for(int j=0; j < 40; j++) random(3);
 
@@ -124,17 +126,17 @@ class MainMenuViewController {
       cubeViews[i] = new CubeView(90,// X initial Position
                              (int)(-(random(height/2))),// Y initial Position
                                        (int)random(4),// Color Index
-                                        initCubeSpeed, 
-                               ((int)(random(20, 40))),// 
+                                        initCubeSpeed,
+                               ((int)(random(20, 40))),//
                                   newSpeed(rotation));//Rotation Speed/Direction
     }
   };
 
   void draw() {
-    lightingContext.render();  
+    lightingContext.render();
     for(int i = 0; i < 4; i++) cubeViews[i].startCube();
-    mainMenuBox.draw();   
-    hint(DISABLE_DEPTH_TEST);      
+    mainMenuBox.draw();
+    hint(DISABLE_DEPTH_TEST);
     subtitleBannerView.draw();
     titleBannerView.draw();
     playbuttonView.draw();
@@ -144,14 +146,14 @@ class MainMenuViewController {
   }
 }
 class GamePlayViewController {
-  
+
   LightingContext lightingContext;
   CubeView[] cubeViews;
   BackToMainMenuButton backToMainMenuButton;
   ScoreViewController scoreViewController;
 
   int l=1;
-  int rotation = 1;    
+  int rotation = 1;
 
   GamePlayViewController(){
     lightingContext      = new LightingContext();
@@ -163,18 +165,18 @@ class GamePlayViewController {
       cubeViews[i] = new CubeView( (int)random(width),// X initial Position
                              (int)(-(random(height))),// Y initial Position
                                        (int)random(4),// Color Index
-                                        initCubeSpeed, 
-                               ((int)(random(20)+20)),// 
+                                        initCubeSpeed,
+                               ((int)(random(20)+20)),//
                                   newSpeed(rotation));//Rotation Speed/Direction
     }
 
   };
 
   void draw(Score score) {
-    lightingContext.render();      
-    for  (l = 1 ; l < (levelNumber); l++) cubeViews[l].moveCube(); 
+    lightingContext.render();
+    for  (l = 1 ; l < (levelNumber); l++) cubeViews[l].moveCube();
     hint(DISABLE_DEPTH_TEST);
-    scoreViewController.draw(score);   
+    scoreViewController.draw(score);
     if (score.catchCount  > 9 && frameCount > event.how_to + frameRate * 5 ) {levelNumber++; score.missCount =0;score.catchCount=0;}
     hint(ENABLE_DEPTH_TEST);
     backToMainMenuButton.draw();
@@ -196,7 +198,7 @@ class GameOverViewController {
     yourScoreView.draw(score);
     gameOverView.draw();
     tSDotcomButtonView.draw();
-    if((event.game_over+frameRate*2.5)  < frameCount && mousePressed) { currentScreen = MAIN_MENU;}    
+    if((event.game_over+frameRate*2.5)  < frameCount && mousePressed) { currentScreen = MAIN_MENU;}
   }
 }
 class TutorialViewController {
@@ -209,7 +211,7 @@ class TutorialViewController {
   int inTextChapter = 1;
   float tutorialSplashOpacity = 255;
   boolean tutorialCatchFlag = false;
-  int rotation = 1;   
+  int rotation = 1;
 
   TutorialViewController(){
     tutorialSplashOpacity = 255;
@@ -221,33 +223,33 @@ class TutorialViewController {
       cubeViews[i] = new CubeView( (int)random(width),// X initial Position
                              (int)(-(random(height))),// Y initial Position
                                        (int)random(4),// Color Index
-                                        initCubeSpeed, 
-                               ((int)(random(20)+20)), 
+                                        initCubeSpeed,
+                               ((int)(random(20)+20)),
                                   newSpeed(rotation));//Rotation Speed/Direction
     }
   }
-  
-  void draw(Score score) {   
-    
+
+  void draw(Score score) {
+
     // Draw Cubes
-    for  (int l = 1 ; l < (levelNumber); l++) cubeViews[l].moveCube(); 
-    scoreViewController.draw(score);   
+    for  (int l = 1 ; l < (levelNumber); l++) cubeViews[l].moveCube();
+    scoreViewController.draw(score);
 
     // Pop up tutorial text
     if (inTextChapter == 1) {
       textAlign(CENTER);
-      tutorialSplashOpacity-=2; 
-      if (tutorialSplashOpacity < 1){ 
-        inTextChapter = 2; 
-        tutorialSplashOpacity = 255; 
+      tutorialSplashOpacity-=2;
+      if (tutorialSplashOpacity < 1){
+        inTextChapter = 2;
+        tutorialSplashOpacity = 255;
       }
       text("How to Play", width/2, height/2);
     }
     if (inTextChapter == 2) {
       textAlign(CENTER);
-      tutorialSplashOpacity--; 
-      if (tutorialSplashOpacity < 1) { 
-        inTextChapter = 3; 
+      tutorialSplashOpacity--;
+      if (tutorialSplashOpacity < 1) {
+        inTextChapter = 3;
         tutorialSplashOpacity = 255;
       }
       fill(255,255,255, (tutorialSplashOpacity*.5)+127 );
@@ -255,9 +257,9 @@ class TutorialViewController {
     }
     if (inTextChapter == 3) {
       textAlign(CENTER);
-      tutorialSplashOpacity--; 
-      if (tutorialSplashOpacity < 1) { 
-        inTextChapter = 4; 
+      tutorialSplashOpacity--;
+      if (tutorialSplashOpacity < 1) {
+        inTextChapter = 4;
         tutorialSplashOpacity = 255;
       }
       fill(255,255,255, (tutorialSplashOpacity*.5) + 127 );
@@ -265,16 +267,16 @@ class TutorialViewController {
     }
     if(inTextChapter == 4 && event.how_to_unlock < frameRate * 5 + frameCount) {
       textAlign(CENTER);
-      tutorialSplashOpacity--; 
-      if (tutorialSplashOpacity < 1) { 
-        inTextChapter = 5; 
-        tutorialSplashOpacity = 255; 
-        score.missCount = 9;      
+      tutorialSplashOpacity--;
+      if (tutorialSplashOpacity < 1) {
+        inTextChapter = 5;
+        tutorialSplashOpacity = 255;
+        score.missCount = 9;
       }
       fill(255,255,255, (tutorialSplashOpacity*.5) + 127 );
       text("Catch 10 and you advance", width/2, height*1/3);
-      text("to the next level", width/2, height*2/3);          
-    }   
+      text("to the next level", width/2, height*2/3);
+    }
     if(inTextChapter == 5 )
     {
       textAlign(CENTER);
@@ -284,29 +286,29 @@ class TutorialViewController {
       text("Game Over", width/2, height*2/3);
       clickToPlayButtonView.draw();
       }
-    }     
+    }
 }
 class TSDotcomButtonView {
 
   TSDotcomButtonView(){};
 
   void draw() {
-    if(mouseX > width/2 && 
-       mouseX < ( (width/2) + 10) && 
-       mouseY > height*7/8 && 
+    if(mouseX > width/2 &&
+       mouseX < ( (width/2) + 10) &&
+       mouseY > height*7/8 &&
        mouseY < ( (height*7/8) + 20) )
-      { 
+      {
         fill(#FFCA00);
-        if(mousePressed) 
+        if(mousePressed)
         {
-          link("http://github.com/topher6345"); 
+          link("http://github.com/topher6345");
           stop();
           exit();
           return;
-        }  
+        }
       }
     else{
-    fill(255); 
+    fill(255);
     }
     text("github.com/topher6345", width/2, height*7/8);
   }
@@ -323,12 +325,12 @@ class HowToPlayButtonView {
       ){
        fill(#5De100);
        if(mousePressed) {
-         currentScreen = HOW_TO; 
-         event.how_to = frameCount; 
+         currentScreen = HOW_TO;
+         event.how_to = frameCount;
        }
       }
     else{
-      fill(255);  
+      fill(255);
       }
       text("How to Play", width/4, height*5/8);
     }
@@ -342,19 +344,19 @@ class PlayButtonView {
         mouseX > ((width*3/4) - 110) &&
         mouseY < ((height*5/8))      &&
         mouseY > ((height*5/8) - 20)) {
-        
+
         fill(g_colorPalette[1]);
         if(mousePressed) {
           score.reset();
           currentScreen = PLAY_GAME;
-          event._catch = frameCount;    
+          event._catch = frameCount;
         }
-    } else { fill(255); } 
-    
+    } else { fill(255); }
+
     text("Play the Game ", width*3/4, height*5/8);
   }
 }
-class TitleBannerView { 
+class TitleBannerView {
   int cubesColors_index,  c,  u,  b, e,  s,  x;
 
   TitleBannerView(int cubesColors_index){
@@ -362,8 +364,8 @@ class TitleBannerView {
   }
 
   void draw(){
-    if ((frameCount % 12) == 0) { 
-      cubesColors_index++; 
+    if ((frameCount % 12) == 0) {
+      cubesColors_index++;
       if (cubesColors_index > 4) { cubesColors_index =0;}
     }
 
@@ -372,19 +374,19 @@ class TitleBannerView {
 
     c = cubesColors_index % 5;
     fill(g_colorPalette[c]);
-    text("C", width*.5/5 , height*4/8); 
+    text("C", width*.5/5 , height*4/8);
 
     u = (cubesColors_index+ 1) % 5;
     fill(g_colorPalette[u]);
-    text("U", width*1.5/5, height*4/8); 
+    text("U", width*1.5/5, height*4/8);
 
     b = (cubesColors_index+2) %5;
     fill(g_colorPalette[b]);
-    text("B", width*2.5/5, height*4/8); 
+    text("B", width*2.5/5, height*4/8);
 
     e = (cubesColors_index + 3) % 5;
     fill(g_colorPalette[e]);
-    text("E", width*3.5/5, height*4/8); 
+    text("E", width*3.5/5, height*4/8);
 
     s = (cubesColors_index + 4) % 5;
     fill(g_colorPalette[s]);
@@ -394,7 +396,7 @@ class TitleBannerView {
   }
 }
 class SubtitleBannerView{
-  
+
   int cubesColors_index,  c,  u,  b, e,  s,  x;
   color[] CUBEScolors = {#00A4CC, #00F224, #FFD33E, #FF5241, #A600CC, };
 
@@ -418,16 +420,16 @@ class SplashCubeView {
   {
     rotation_index=0;
   }
-  void draw() 
+  void draw()
   {
     if ((frameCount % 12) == 0) i = (int)random(5);
     pushMatrix();
     fill(g_colorPalette[i]);
-    translate(width/2, height*5/8, 0); 
+    translate(width/2, height*5/8, 0);
     rotateY(rotation_index*.01*PI*2);
-    box(20); 
+    box(20);
     popMatrix();
-    rotation_index++; 
+    rotation_index++;
   }
 }
 class CubeView {
@@ -438,22 +440,22 @@ class CubeView {
       rotationSpeed,
            cubeSize;
 
-  int ypos[] = new int[]{-40, 
-                   (-40)*2+5, 
-                   (-40)*3+5, 
-                   (-40)*4+5, 
-                   (-40)*5+5, 
-                   (-40)*6+5, 
+  int ypos[] = new int[]{-40,
+                   (-40)*2+5,
+                   (-40)*3+5,
+                   (-40)*4+5,
+                   (-40)*5+5,
+                   (-40)*6+5,
                   (-40)*7+5};
-  
+
 
   float cubeSpeed;
 
-  CubeView(  int x, 
-             int y, 
-   int color_index, 
-       float speed, 
-             int c, 
+  CubeView(  int x,
+             int y,
+   int color_index,
+       float speed,
+             int c,
              int ro)
   {
     cubeXposition = width * (x / 30);
@@ -464,18 +466,18 @@ class CubeView {
     rotationSpeed = ro;
 
   }
-  
+
   void moveCube()
   {
 
     pushMatrix();
-      translate(cubeXposition, cubeYposition, 0); 
+      translate(cubeXposition, cubeYposition, 0);
       rotateY(rotation_index*.01*PI*2);
-            
+
       // Hover Detection
-      if(mouseX < cubeXposition + (cubeSize-cubeSize*.25) && 
-         mouseX > cubeXposition - (cubeSize-cubeSize*.25) && 
-         mouseY < cubeYposition + (cubeSize-cubeSize*.25) && 
+      if(mouseX < cubeXposition + (cubeSize-cubeSize*.25) &&
+         mouseX > cubeXposition - (cubeSize-cubeSize*.25) &&
+         mouseY < cubeYposition + (cubeSize-cubeSize*.25) &&
          mouseY > cubeYposition - (cubeSize-cubeSize*.25)) {
         fill(255);
 
@@ -489,19 +491,19 @@ class CubeView {
           score.totalCatchCount++;
         cubeSpeed *= speedIncrement;
         event._catch = frameCount+2;
-        rotationSpeed = newSpeed(rotationSpeed); 
+        rotationSpeed = newSpeed(rotationSpeed);
         }
       }
       else fill(g_colorPalette[whichColor]);
       box(cubeSize);
     popMatrix();
-    
-    if (score.missCount<10){ 
-      rotation_index+= rotationSpeed;; 
+
+    if (score.missCount<10){
+      rotation_index+= rotationSpeed;;
       cubeYposition+=cubeSpeed;
-    }   
-    
-    if(score.missCount == 10){ 
+    }
+
+    if(score.missCount == 10){
       currentScreen = GAME_OVER;
       event.game_over = frameCount+2;
       score.catchCount = 0;
@@ -513,26 +515,26 @@ class CubeView {
       whichColor = (whichColor + 1) % 4;
       score.missCount++;
       event.miss = frameCount+2;
-      rotationSpeed = newSpeed(rotationSpeed); 
+      rotationSpeed = newSpeed(rotationSpeed);
     }
 
     if(rotation_index > 99) rotation_index = 0;
   }
-  
+
   void startCube()
   {
     pushMatrix();
-    translate(cubeXposition, cubeYposition, 0); 
+    translate(cubeXposition, cubeYposition, 0);
     rotateY(rotation_index*.01*PI*2);
     int j, i;
-  
-    if(mouseX < cubeXposition + cubeSize && 
-       mouseX > cubeXposition - cubeSize && 
-       mouseY < cubeYposition + cubeSize && 
-       mouseY > cubeYposition - cubeSize) 
+
+    if(mouseX < cubeXposition + cubeSize &&
+       mouseX > cubeXposition - cubeSize &&
+       mouseY < cubeYposition + cubeSize &&
+       mouseY > cubeYposition - cubeSize)
     {
       fill(255);
-      cursor(HAND);                
+      cursor(HAND);
       if(mousePressed)
       {
         cubeYposition = 0;
@@ -540,24 +542,24 @@ class CubeView {
         whichColor = (whichColor + 1) % 4;
         cubeSpeed *= speedIncrement;
         event._catch = frameCount+2;
-        rotationSpeed = newSpeed(rotationSpeed); 
+        rotationSpeed = newSpeed(rotationSpeed);
       }
     }
     else fill(g_colorPalette[whichColor]);
     box(cubeSize);
     popMatrix();
-    rotation_index+= rotationSpeed; 
-    cubeYposition+=cubeSpeed;   
-    
+    rotation_index+= rotationSpeed;
+    cubeYposition+=cubeSpeed;
+
     if(cubeYposition > height + 40)
     {
-      
+
       cubeYposition = -((int) random(300) + 100);
       cubeXposition = (int) random(width);
-      rotationSpeed = newSpeed(rotationSpeed); 
-      
-      
-      
+      rotationSpeed = newSpeed(rotationSpeed);
+
+
+
       whichColor = (int)random(4);
       cubeSize = (int)(random(20)+20);
     }
@@ -573,16 +575,16 @@ class ClickToPlayButtonView {
     if( mouseX < width/2  + 100 &&
         mouseX > width/2  - 100 &&
         mouseY < height/2 + 20  &&
-        mouseY > height/2 ){ 
+        mouseY > height/2 ){
     fill(255);
      if(mousePressed)
      {
-       event._catch = frameCount;  
+       event._catch = frameCount;
        score.reset();
        currentScreen = PLAY_GAME;
      }
    }
-   else  fill(120,120,120,120); 
+   else  fill(120,120,120,120);
    text("Click to Play", width/2, height/2);
   }
 }
@@ -593,7 +595,7 @@ class Score {
    totalCatchCount,
         totalScore; // Because score is totalCatchCount * level #
 
-  Score() { 
+  Score() {
     this.reset();
   }
 
@@ -601,7 +603,7 @@ class Score {
          missCount = 0;
         catchCount = 0;
    totalCatchCount = 0;
-        totalScore = 0; 
+        totalScore = 0;
   }
 }
 class ScoreViewController {
@@ -609,7 +611,7 @@ class ScoreViewController {
   ScoreViewController(){};
 
   void draw(Score score){
-    strokeWeight(1);    
+    strokeWeight(1);
     if(score.missCount <= score.catchCount)
     {
       fill(255);
@@ -620,9 +622,9 @@ class ScoreViewController {
     if(score.catchCount < score.missCount)
     {
       fill(g_colorPalette[3]);
-      arc(width*4/8, 75, 60, 60, (PI*3/2),PI*3/2 + TWO_PI*(score.missCount*.1));    
+      arc(width*4/8, 75, 60, 60, (PI*3/2),PI*3/2 + TWO_PI*(score.missCount*.1));
       fill(255);
-      arc(width*4/8, 75, 60, 60, (PI*3/2),PI*3/2 + TWO_PI*((score.catchCount)*.1)); 
+      arc(width*4/8, 75, 60, 60, (PI*3/2),PI*3/2 + TWO_PI*((score.catchCount)*.1));
     }
 
     fill(255);
@@ -638,9 +640,9 @@ class ScoreViewController {
   }
 }
 class Events {
-  
-  int   _catch, 
-          miss, 
+
+  int   _catch,
+          miss,
      game_over,
        how_to,
        welcome,
@@ -679,29 +681,29 @@ class BackToMainMenuButton {
   BackToMainMenuButton(){};
 
   void draw() {
-  
+
     if( mouseX < width*1/20 + 10   &&
         mouseX > width*1/20 - 10   &&
         mouseY < height*19/20 + 10 &&
         mouseY > height*19/20 - 10)
-      { 
+      {
         fill(255);
          if(mousePressed)
          {
            currentScreen = MAIN_MENU;
-           event._catch = frameCount;    
+           event._catch = frameCount;
          }
        }
-      else  fill(255,255,255,128); 
-      ellipse( width*1/20, height*19/20, 20, 20);  
+      else  fill(255,255,255,128);
+      ellipse( width*1/20, height*19/20, 20, 20);
   }
-}  
+}
 class LightingContext {
 
   LightingContext(){};
 
   void render() {
-  
+
     pointLight(150, 100, 0,   // Color
                200, -150, 0); // Position
 
@@ -714,7 +716,7 @@ class LightingContext {
               0, 40, 200,    // Position
               0, -0.5, -0.5, // Direction
               PI / 2, 2);    // Angle, concentration
-              
+
     ambientLight(150, 150, 150);
   }
 }
